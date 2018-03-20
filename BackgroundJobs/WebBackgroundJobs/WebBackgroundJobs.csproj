@@ -1,73 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4A0B474B-4024-4EE2-A35F-2FC10BFF48A7}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>net452</TargetFramework>
+    <Version>1.0.0</Version>    
     <RootNamespace>WebBackgroundJobs</RootNamespace>
     <AssemblyName>WebBackgroundJobs</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+  
   <ItemGroup>
-    <Reference Include="Ionic.Zip, Version=1.9.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetZip.1.9.3\lib\net20\Ionic.Zip.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="ScriptEngine, Version=1.0.19.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OneScript.1.0.19\lib\net452\ScriptEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="ScriptEngine.HostedScript, Version=1.0.19.105, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OneScript.StandardLibrary.1.0.19\lib\net452\ScriptEngine.HostedScript.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <PackageReference Include="OneScript" Version="1.0.19" />
+    <PackageReference Include="OneScript.StandardLibrary" Version="1.0.19" />
     <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.Web" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AspNetHostEngine.cs" />
-    <Compile Include="AspNetLog.cs" />
-    <Compile Include="NullApplicationHost.cs" />
-    <Compile Include="NullEntryScriptSrc.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebBackgroundJob.cs" />
-    <Compile Include="WebBackgroundJobImpl.cs" />
-    <Compile Include="WebBackgroundJobsManager.cs" />
-    <Compile Include="WebBackgroundJobsManagerImpl.cs" />
-  </ItemGroup>
-  <ItemGroup />
+
   <ItemGroup>
     <None Include="OneScript\OneScript.md" />
     <None Include="packages.config" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  
+  <Target Name="PackForHub" DependsOnTargets="Build">
+
+    <Error Text="Build Property OspxTarget is not defined" Condition="'$(OspxTarget)' == ''" />
+
+    <ItemGroup>
+        <FilesToRemove Include="$(OutputPath)/*.pdb" />
+        <FilesToCopy Include="$(OutputPath)/*.dll" Exclude="$(OutputPath)/ScriptEngine.dll;$(OutputPath)/ScriptEngine.HostedScript.dll" />
+    </ItemGroup>
+
+    <Delete Files="@(FilesToRemove)" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OspxTarget)" />
+
+  </Target>
 </Project>
