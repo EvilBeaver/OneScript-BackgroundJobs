@@ -30,7 +30,7 @@
 
     <ItemGroup>
         <FilesToRemove Include="$(OutputPath)/*.pdb" />
-        <FilesToCopy Include="$(OutputPath)/*.dll" Exclude="$(OutputPath)/ScriptEngine.dll;$(OutputPath)/ScriptEngine.HostedScript.dll" />
+        <FilesToCopy Include="$(OutputPath)/WebBackgroundJobs.dll" />
     </ItemGroup>
 
     <Delete Files="@(FilesToRemove)" />
