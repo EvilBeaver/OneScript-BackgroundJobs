@@ -30,7 +30,7 @@
 
     <ItemGroup>
         <FilesToRemove Include="$(OutputPath)/*.pdb" />
-        <FilesToCopy Include="$(OutputPath)/WebBackgroundJobs.dll" />
+        <FilesToCopy Include="$(OutputPath)/*.dll" />
     </ItemGroup>
 
     <Delete Files="@(FilesToRemove)" />
